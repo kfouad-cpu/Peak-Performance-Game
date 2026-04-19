@@ -1,37 +1,28 @@
 # Peak Performance Game
 
 ## Introduction
-Welcome to the Peak Performance Game! This game is designed to help you maximize your performance through strategic challenges and skill development.
+In Peak Performance, you take on the role of an elite athlete in the final 4-week "Macrocycle" leading up to a major championship. You must balance three critical metrics:
 
-## Getting Started
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/kfouad-cpu/Peak-Performance-Game.git
-   ```
+**Physical Fatigue**: Pushing too hard leads to injury (DNF).
 
-2. **Navigate to the directory**:
-   ```bash
-   cd Peak-Performance-Game
-   ```
+**Mental Stress**: High anxiety or burnout reduces training quality.
 
-3. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+**Peak Performance**: Your actual readiness for race day.
 
-## Game Rules
-- The objective of the game is to complete various challenges.
-- You will earn points and badges as you progress.
+## How to play
 
-## Challenge Types
-- **Skill Challenges**: Test your abilities in various domains.
-- **Strategic Challenges**: Make decisions that will impact your performance.
+**Make Decisions**: Each week, choose one of three training paths based on your current fatigue levels.
 
-## Contributions
-We welcome contributions! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+**Watch the Multiplier**: Decisions made in the final weeks have double the impact on your body and performance.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+**The Goal**: Reach Race Day with over 90% Performance and under 60% Fatigue for the best chance at Gold.
 
-## Contact
-For questions or support, please reach out to [support@example.com](mailto:support@example.com).
+## Winning conditions
+
+**Legendary Gold**: Performance > 95% with low fatigue.
+
+**Olympic Silver/Bronze**: High performance with moderate fatigue.
+
+**The Crash**: High performance but critical fatigue levels causing a late-race fade.
+
+**DNF**: Reaching 100% Physical or Mental fatigue.
