@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peak Performance: 4-Week Cycle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .bar-transition {
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .choice-btn {
+            transition: all 0.2s ease;
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .choice-btn:hover {
+            transform: translateY(-2px);
+            background-color: rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .start-gradient {
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+        }
+
+        .progress-node {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .progress-node.active {
+            background-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+            transform: scale(1.2);
+        }
+
+        /* Custom Scrollbar for the narrative area */
+        #narrative-area::-webkit-scrollbar {
+            width: 4px;
+        }
+        #narrative-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #narrative-area::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+
+    <div id="game-container" class="max-w-3xl w-full glass-card rounded-3xl shadow-2xl overflow-hidden border border-slate-700/50">
+        
+        <!-- START SCREEN -->
+        <div id="start-screen" class="p-12 text-center start-gradient">
+            <div class="mb-6 inline-block p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <h1 class="text-5xl font-black tracking-tighter text-white mb-4">
+                PEAK <span class="text-blue-500">PERFORMANCE</span>
+            </h1>
+            <p class="text-slate-400 text-lg mb-8 max-w-md mx-auto leading-relaxed">
+                You have 4 weeks to prepare for the race of your life. Every choice matters. Manage your fatigue or face total burnout.
+            </p>
+            <div class="grid grid-cols-3 gap-3 mb-10 text-[10px] font-bold uppercase tracking-widest">
+                <div class="p-4 bg-slate-800/50 rounded-xl border border-orange-500/20 text-orange-400">Physical Load</div>
+                <div class="p-4 bg-slate-800/50 rounded-xl border border-purple-500/20 text-purple-400">Mental Stress</div>
+                <div class="p-4 bg-slate-800/50 rounded-xl border border-green-500/20 text-green-400">Peak Form</div>
+            </div>
+            <button id="start-btn" class="px-12 py-5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl transition-all transform hover:scale-105 shadow-xl shadow-blue-500/25 uppercase tracking-widest text-sm">
+                Begin Training Cycle
+            </button>
+        </div>
+
+        <!-- MAIN GAME UI -->
+        <div id="game-ui" class="hidden animate-in fade-in duration-700">
+            <!-- Progress Timeline -->
+            <div class="px-8 pt-8 pb-4 bg-slate-900/40 border-b border-slate-800">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Macrocycle Timeline</span>
+                    <span id="weeks-to-race" class="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] px-3 py-1 bg-blue-500/10 rounded-full border border-blue-500/20">4 Weeks to Race</span>
+                </div>
+                <div class="relative w-full h-1.5 bg-slate-800 rounded-full flex justify-between items-center px-1">
+                    <div id="progress-line" class="absolute top-0 left-0 h-full bg-blue-500 rounded-full transition-all duration-700" style="width: 0%"></div>
+                    <div class="progress-node active w-4 h-4 rounded-full bg-slate-700 border-2 border-slate-900 z-10"></div>
+                    <div class="progress-node w-4 h-4 rounded-full bg-slate-700 border-2 border-slate-900 z-10"></div>
+                    <div class="progress-node w-4 h-4 rounded-full bg-slate-700 border-2 border-slate-900 z-10"></div>
+                    <div class="progress-node w-4 h-4 rounded-full bg-slate-700 border-2 border-slate-900 z-10"></div>
+                    <div class="progress-node w-6 h-6 rounded-full bg-slate-700 border-2 border-slate-900 z-10 flex items-center justify-center shadow-lg">
+                        <span class="text-[10px]">🏁</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Dashboard -->
+            <div class="p-8 border-b border-slate-800 bg-slate-800/30">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="group">
+                        <div class="flex justify-between text-[11px] font-black mb-2 tracking-wider text-slate-400">
+                            <span>PHYSICAL FATIGUE</span>
+                            <span id="phys-val" class="text-orange-400">20%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+                            <div id="phys-bar" class="h-full bg-gradient-to-r from-orange-600 to-orange-400 rounded-full bar-transition" style="width: 20%"></div>
+                        </div>
+                    </div>
+
+                    <div class="group">
+                        <div class="flex justify-between text-[11px] font-black mb-2 tracking-wider text-slate-400">
+                            <span>MENTAL STRESS</span>
+                            <span id="ment-val" class="text-purple-400">20%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+                            <div id="ment-bar" class="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full bar-transition" style="width: 20%"></div>
+                        </div>
+                    </div>
+
+                    <div class="group">
+                        <div class="flex justify-between text-[11px] font-black mb-2 tracking-wider text-slate-400">
+                            <span>PEAK PERFORMANCE</span>
+                            <span id="perf-val" class="text-green-400">40%</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+                            <div id="perf-bar" class="h-full bg-gradient-to-r from-green-600 to-green-400 rounded-full bar-transition" style="width: 40%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div id="narrative-area" class="p-8 min-h-[420px] flex flex-col justify-center overflow-y-auto">
+                <div id="story-text" class="text-lg leading-relaxed mb-8 text-slate-200"></div>
+                <div id="choices-container" class="space-y-4"></div>
+            </div>
+
+            <!-- Footer Meta -->
+            <div class="px-8 py-5 bg-slate-900/60 text-[10px] font-bold text-slate-500 flex justify-between border-t border-slate-800">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span id="scaling-info" class="uppercase tracking-widest">PHASE: FOUNDATION</span>
+                </div>
+                <span id="warning-text" class="text-red-500 font-black uppercase tracking-widest"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Core Game State
+        let state = {
+            physical: 20,
+            mental: 20,
+            performance: 40,
+            week: 0 
+        };
+
+        const scenarios = [
+            {
+                id: 0,
+                weekTitle: "Week 4: Foundation Phase",
+                text: "You are one month out from the Olympic trials. This phase is about building your base. You feel fresh, but your rivals are already posting fast training times on social media. How do you start your campaign?",
+                choices: [
+                    {
+                        text: "Focus on Base Mileage: Long, slow aerobic work to build the engine.",
+                        phys: 15, ment: 10, perf: 15,
+                        feedback: "Engine built. You have a massive aerobic capacity now, though the monotony was a mental grind."
+                    },
+                    {
+                        text: "Heavy Strength Cycle: Prioritize explosive power in the gym.",
+                        phys: 25, ment: 5, perf: 20,
+                        feedback: "You feel like a powerhouse. Your sprints are punchy, but your lower back is feeling the strain."
+                    },
+                    {
+                        text: "Aggressive Testing: Run a 5k time-trial to see where you stand.",
+                        phys: 30, ment: 15, perf: 25,
+                        feedback: "Data acquired! You know your splits, but you've put a lot of stress on your legs very early."
+                    }
+                ]
+            },
+            {
+                id: 1,
+                weekTitle: "Week 3: Volume Phase",
+                text: "The workload increases. You're living in a cycle of training, eating, and sleeping. A high-altitude camp is an option, but the isolation is intense.",
+                choices: [
+                    {
+                        text: "Altitude Camp: Head to the mountains for extreme training.",
+                        phys: 35, ment: 20, perf: 30,
+                        feedback: "Red blood cells are skyrocketing. You feel like you could run forever, but you're mentally exhausted from the solitude."
+                    },
+                    {
+                        text: "Home Support: Stay with family and maintain high volume locally.",
+                        phys: 20, ment: -5, perf: 15,
+                        feedback: "Stability is key. You're handling the load comfortably because your mental health is high."
+                    },
+                    {
+                        text: "Hybrid Approach: Mix training with essential sponsor obligations.",
+                        phys: 10, ment: 30, perf: 5,
+                        feedback: "The funds are secure, but your mind is elsewhere and you missed two key recovery sessions."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                weekTitle: "Week 2: Intensity Phase",
+                text: "Two weeks out. The 'Pain Cave' phase. Workouts are shorter but incredibly fast. A slight tightness in your Achilles is bothering you. How do you proceed?",
+                choices: [
+                    {
+                        text: "Push Through: No room for weakness this close to the race.",
+                        phys: 40, ment: 15, perf: 35,
+                        feedback: "Your speed is world-class. However, you're limping between sessions. It's a high-stakes gamble."
+                    },
+                    {
+                        text: "Conservative Intensity: Hit 90% effort and focus on recovery.",
+                        phys: 15, ment: 10, perf: 20,
+                        feedback: "Sharp and healthy. You haven't peaked yet, but you're guaranteed to make the starting line."
+                    },
+                    {
+                        text: "Mental Mastery: Shift focus to visualization and light drills.",
+                        phys: -10, ment: 35, perf: 10,
+                        feedback: "Physically you're fresh, but you feel slightly sluggish and disconnected from your top-end speed."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                weekTitle: "Week 1: The Taper",
+                text: "One week to go. Your body is repairing itself, making you feel weirdly heavy and anxious. The 'Taper Tantrums' are in full swing. One final decision remains.",
+                choices: [
+                    {
+                        text: "Confidence Booster: One last hard sprint to prove you still have it.",
+                        phys: 25, ment: 15, perf: 10,
+                        feedback: "You're fast, but you've drained your energy reserves 4 days before the final. Was it worth it?"
+                    },
+                    {
+                        text: "Total Silence: Shut down your phone and go into full recovery mode.",
+                        phys: -30, ment: -20, perf: 10,
+                        feedback: "You are a coiled spring. Your body feels light, and your mind is completely empty of doubt."
+                    },
+                    {
+                        text: "Strategic Networking: Meet with coaches and scouts for final talks.",
+                        phys: 5, ment: 20, perf: -5,
+                        feedback: "Future looks bright, but the extra standing and talking has left your legs feeling flat."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                weekTitle: "🏆 RACE DAY",
+                text: "The stadium lights are blinding. The crowd is a distant roar. You step onto the blocks. This is the moment.",
+                choices: []
+            }
+        ];
+
+        // UI Helpers
+        const getEl = (id) => document.getElementById(id);
+
+        document.getElementById('start-btn').onclick = () => {
+            getEl('start-screen').classList.add('hidden');
+            getEl('game-ui').classList.remove('hidden');
+            renderScenario();
+        };
+
+        function updateUI() {
+            // Burnout Check
+            if (state.physical >= 100 || state.mental >= 100) {
+                handleBurnout();
+                return;
+            }
+
+            state.physical = Math.max(0, Math.min(100, state.physical));
+            state.mental = Math.max(0, Math.min(100, state.mental));
+            state.performance = Math.max(0, Math.min(100, state.performance));
+
+            getEl('phys-bar').style.width = state.physical + '%';
+            getEl('ment-bar').style.width = state.mental + '%';
+            getEl('perf-bar').style.width = state.performance + '%';
+            
+            getEl('phys-val').innerText = Math.round(state.physical) + '%';
+            getEl('ment-val').innerText = Math.round(state.mental) + '%';
+            getEl('perf-val').innerText = Math.round(state.performance) + '%';
+            
+            // Progress Update
+            const nodes = document.querySelectorAll('.progress-node');
+            const line = getEl('progress-line');
+            const text = getEl('weeks-to-race');
+            
+            const progress = (state.week / (scenarios.length - 1)) * 100;
+            line.style.width = progress + '%';
+            
+            nodes.forEach((n, i) => {
+                if (i <= state.week) n.classList.add('active');
+                else n.classList.remove('active');
+            });
+
+            const remaining = 4 - state.week;
+            text.innerText = remaining > 0 ? `${remaining} Week${remaining > 1 ? 's' : ''} to Race` : "RACE DAY";
+
+            const info = getEl('scaling-info');
+            const phases = ["FOUNDATION", "VOLUME", "INTENSITY", "TAPER"];
+            info.innerText = `PHASE: ${phases[state.week] || 'FINALS'}`;
+
+            const warning = getEl('warning-text');
+            if (state.physical > 85 || state.mental > 85) warning.innerText = "!! CRITICAL FATIGUE !!";
+            else if (state.performance < 30) warning.innerText = "!! POOR FORM !!";
+            else warning.innerText = "";
+        }
+
+        function renderScenario() {
+            updateUI();
+            const sc = scenarios[state.week];
+            const container = getEl('choices-container');
+            const story = getEl('story-text');
+
+            story.innerHTML = `<p class="text-blue-500 font-black mb-2 uppercase tracking-widest text-xs">${sc.weekTitle}</p>
+                               <p class="text-slate-100">${sc.text}</p>`;
+            container.innerHTML = '';
+
+            if (state.week === scenarios.length - 1) {
+                handleRaceOutcome();
+                return;
+            }
+
+            sc.choices.forEach(c => {
+                const b = document.createElement('button');
+                b.className = "choice-btn w-full p-5 text-left border border-slate-700/50 rounded-2xl hover:border-blue-500 text-slate-300 hover:text-white font-semibold text-sm leading-snug shadow-sm";
+                b.innerText = c.text;
+                b.onclick = () => makeChoice(c);
+                container.appendChild(b);
+            });
+        }
+
+        function makeChoice(c) {
+            // Urgency Multiplier: Impact increases as we approach race day
+            const mult = 1 + (state.week * 0.4); 
+
+            // Interdependence Logic
+            let physDrag = state.physical > 50 ? (state.physical - 50) * 0.5 : 0;
+            let mentPenalty = state.mental > 70 ? 0.5 : 1.0;
+
+            state.physical += (c.phys * mult);
+            state.mental += (c.ment * (1 + (state.week * 0.1)));
+            state.performance += (c.perf * mentPenalty) - physDrag;
+
+            if (state.performance < 30) state.mental += 20;
+
+            if (state.physical >= 100 || state.mental >= 100) {
+                handleBurnout();
+                return;
+            }
+
+            updateUI();
+
+            const story = getEl('story-text');
+            story.innerHTML = `
+                <div class="space-y-6">
+                    <div class="inline-block px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-[10px] font-black tracking-widest uppercase">Outcome Report</div>
+                    <p class="text-xl text-slate-100 leading-relaxed italic">"${c.feedback}"</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
+                             <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Impact Multiplier</p>
+                             <p class="text-white font-bold">x${mult.toFixed(2)}</p>
+                        </div>
+                        <div class="p-4 bg-slate-900/50 rounded-2xl border border-slate-800">
+                             <p class="text-[9px] text-slate-500 font-black uppercase mb-1">Fatigue Penalty</p>
+                             <p class="${physDrag > 0 ? 'text-red-400' : 'text-green-400'} font-bold">-${Math.round(physDrag)}% Perf</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const container = getEl('choices-container');
+            container.innerHTML = '';
+            const next = document.createElement('button');
+            next.className = "w-full py-5 bg-blue-600 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-blue-500 shadow-xl shadow-blue-600/20";
+            next.innerText = state.week === 3 ? "Enter Stadium" : "Next Training Week";
+            next.onclick = () => { state.week++; renderScenario(); };
+            container.appendChild(next);
+        }
+
+        function handleBurnout() {
+            const ui = getEl('narrative-area');
+            const isPhys = state.physical >= 100;
+            
+            ui.innerHTML = `
+                <div class="text-center py-6">
+                    <div class="mb-6 inline-block p-4 rounded-full bg-red-500/10 border border-red-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-6xl font-black text-white mb-4 tracking-tighter uppercase">BURNOUT</h2>
+                    <p class="text-xl text-red-400 font-bold mb-4 uppercase tracking-widest">${isPhys ? 'Physical Collapse' : 'Psychological Break'}</p>
+                    <p class="text-slate-400 mb-10 max-w-sm mx-auto leading-relaxed">
+                        ${isPhys ? "Your body shattered under the load. A catastrophic injury has ended your season before the starting gun even fired." : "The mental weight of the training became unbearable. You have experienced total burnout and withdrawn from the competition."}
+                    </p>
+                    <button onclick="location.reload()" class="px-10 py-4 bg-slate-800 border border-slate-700 rounded-2xl font-bold hover:bg-slate-700 transition-all uppercase tracking-widest text-xs">Try Again</button>
+                </div>
+            `;
+            getEl('phys-bar').style.width = Math.min(100, state.physical) + '%';
+            getEl('ment-bar').style.width = Math.min(100, state.mental) + '%';
+        }
+
+        function handleRaceOutcome() {
+            const story = getEl('story-text');
+            const container = getEl('choices-container');
+            
+            let title = "FINISH LINE";
+            let desc = "";
+            let color = "text-white";
+
+            if (state.performance >= 95 && state.physical < 35 && state.mental < 35) {
+                title = "LEGENDARY GOLD";
+                desc = "The perfect peak. You broke the world record in a display of absolute human dominance. You are now a sporting legend.";
+                color = "text-yellow-400";
+            } else if (state.performance >= 80 && state.physical < 60) {
+                title = "OLYMPIC SILVER";
+                desc = "A magnificent performance. You gave everything, but were out-touched by a rival who had a slightly better taper.";
+                color = "text-slate-300";
+            } else if (state.performance >= 65 && state.physical < 85) {
+                title = "GRITTY BRONZE";
+                desc = "You were running on fumes, but your heart carried you across the line. A hard-fought podium finish.";
+                color = "text-orange-500";
+            } else if (state.performance < 50) {
+                title = "TOP 10 FINISH";
+                desc = "You finished safely, but you lacked the 'spark' needed for a medal. A solid result, but room for improvement.";
+                color = "text-blue-400";
+            } else {
+                title = "THE CRASH";
+                desc = "You entered the race overtrained. You led for the first half, but your legs turned to lead in the final sprint.";
+                color = "text-red-500";
+            }
+
+            story.innerHTML = `
+                <div class="text-center">
+                    <h2 class="text-6xl font-black mb-4 ${color} uppercase tracking-tighter animate-pulse">${title}</h2>
+                    <p class="text-xl text-slate-200 leading-relaxed mb-8 max-w-md mx-auto">${desc}</p>
+                    <div class="inline-grid grid-cols-3 gap-6 p-6 bg-slate-900/50 rounded-3xl border border-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-500">
+                        <div>Phys: ${Math.round(state.physical)}%</div>
+                        <div>Ment: ${Math.round(state.mental)}%</div>
+                        <div>Perf: ${Math.round(state.performance)}%</div>
+                    </div>
+                </div>
+            `;
+            
+            const btn = document.createElement('button');
+            btn.className = "w-full py-5 bg-slate-800 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-slate-700 mt-8 transition-all";
+            btn.innerText = "Start New Macrocycle";
+            btn.onclick = () => location.reload();
+            container.appendChild(btn);
+        }
+    </script>
+</body>
+</html>
